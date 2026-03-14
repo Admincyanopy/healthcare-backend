@@ -1,0 +1,40 @@
+from sqlalchemy.orm import Session
+from app.models.user_model import User
+from app.schemas.user_schema import RegisterUser
+from fastapi import HTTPException
+
+
+def register_user(db: Session, user: RegisterUser):
+
+    existing_user = db.query(User).filter(
+        User.phone_number == user.phone_number
+    ).first()
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Phone already registered")
+
+    db_user = User(
+        first_name=user.first_name,
+        last_name=user.last_name,
+        dob=user.dob,
+        gender=user.gender,
+        phone_number=user.phone_number,
+        email=user.email,
+        password=user.password
+    )
+
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+
+    return db_user
+
+
+def login_user(db: Session, phone: str, password: str):
+
+    user = db.query(User).filter(
+        User.phone_number == phone,
+        User.password == password
+    ).first()
+
+    return user
