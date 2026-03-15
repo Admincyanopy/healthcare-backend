@@ -3,7 +3,7 @@ from app.routes import auth_routes
 
 from app.database import engine, Base
 from app.models import user_model
-
+from app.models.user_model import User
 
 app = FastAPI(title="Healthcare Backend API")
 
