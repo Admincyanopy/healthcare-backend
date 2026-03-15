@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+import os
 
-DATABASE_URL = "sqlite:///./healthcare.db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False}
+    DATABASE_URL,
+    pool_pre_ping=True
 )
 
 SessionLocal = sessionmaker(
@@ -16,8 +17,6 @@ SessionLocal = sessionmaker(
 
 Base = declarative_base()
 
-
-# Dependency for DB session
 def get_db():
     db = SessionLocal()
     try:
