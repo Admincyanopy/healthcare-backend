@@ -14,6 +14,8 @@ def register_user(db: Session, user: RegisterUser):
     if existing_user:
         raise HTTPException(status_code=400, detail="Phone already registered")
 
+    hashed_password = hash_password(user.password)
+
     db_user = User(
         first_name=user.first_name,
         last_name=user.last_name,
@@ -21,7 +23,7 @@ def register_user(db: Session, user: RegisterUser):
         gender=user.gender,
         phone_number=user.phone_number,
         email=user.email,
-        password=user.password
+        password=hashed_password
     )
 
     db.add(db_user)
@@ -34,8 +36,13 @@ def register_user(db: Session, user: RegisterUser):
 def login_user(db: Session, phone: str, password: str):
 
     user = db.query(User).filter(
-        User.phone_number == phone,
-        User.password == password
+        User.phone_number == phone
     ).first()
+
+    if not user:
+        return None
+
+    if not verify_password(password, user.password):
+        return None
 
     return user
