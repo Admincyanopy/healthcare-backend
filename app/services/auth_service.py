@@ -15,8 +15,10 @@ def register_user(db: Session, user: RegisterUser):
         raise HTTPException(status_code=400, detail="Phone already registered")
 
     hashed_password = hash_password(user.password)
+    print("===== PASSWORD HASHED =====")
+    print("Original:", user.password)
+    print("Hashed:", hashed_password)
 
-    print("HASHED PASSWORD GENERATED:", hashed_password)
     db_user = User(
         first_name=user.first_name,
         last_name=user.last_name,
