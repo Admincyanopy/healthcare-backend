@@ -16,6 +16,7 @@ def register_user(db: Session, user: RegisterUser):
 
     hashed_password = hash_password(user.password)
 
+    print("HASHED PASSWORD GENERATED:", hashed_password)
     db_user = User(
         first_name=user.first_name,
         last_name=user.last_name,
