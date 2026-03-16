@@ -6,7 +6,6 @@ from app.database import get_db
 from app.schemas.user_schema import RegisterUser, LoginUser
 from app.services.auth_service import register_user, login_user
 
-
 router = APIRouter()
 
 otp_store = {}
@@ -17,7 +16,6 @@ otp_store = {}
 def send_otp(phone_number: str):
 
     otp = str(random.randint(100000, 999999))
-
     otp_store[phone_number] = otp
 
     print("OTP sent to", phone_number, ":", otp)
@@ -37,7 +35,6 @@ def verify_otp(phone_number: str, otp: str):
     if saved_otp != otp:
         raise HTTPException(status_code=400, detail="Invalid OTP")
 
-    # remove OTP after verification
     del otp_store[phone_number]
 
     return {"message": "OTP verified"}
