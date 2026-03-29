@@ -8,8 +8,20 @@ pwd_context = CryptContext(
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    try:
+        # ✅ bcrypt limit fix
+        password = password[:72]
+        return pwd_context.hash(password)
+    except Exception as e:
+        print("HASH ERROR:", e)
+        raise
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        # ✅ bcrypt limit fix
+        plain_password = plain_password[:72]
+        return pwd_context.verify(plain_password, hashed_password)
+    except Exception as e:
+        print("VERIFY ERROR:", e)
+        return False  # ✅ prevent server crash
